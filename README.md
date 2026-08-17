@@ -84,6 +84,4 @@ templates/
 static/css/style.css        Design system (navy/gold registrar theme)
 ```
 
-## What changed from the earlier PHP version
 
-This is a rebuild of the same feature set (three roles, attendance, marks/GPA) in Flask instead of raw PHP/MySQLi, for easier deployment. One real gap in the PHP version is fixed here: delete actions are CSRF-protected POST forms, not bare `GET` links.
