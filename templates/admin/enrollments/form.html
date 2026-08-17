@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if enrollment else 'Add' }} Enrollment{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Registrar</div>
+  <h1 class="font-display">{{ 'Edit' if enrollment else 'Add' }} Enrollment</h1>
+  <p class="text-muted mb-0">{{ 'Record #' ~ enrollment.id if enrollment else 'Enroll a student into a course.' }}</p>
+</div>
+
+<div class="udms-card p-4 p-md-5" style="max-width: 640px;">
+  <form method="POST">
+    {{ csrf_token_field() }}
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Student <span class="text-danger">*</span></label>
+        <select class="form-select" name="student_id" required>
+          <option value="" disabled {{ 'selected' if not enrollment else '' }}>Select student</option>
+          {% for s in students %}
+          <option value="{{ s.id }}" {{ 'selected' if enrollment and enrollment.student_id == s.id else '' }}>{{ s.roll_number }} — {{ s.full_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Course <span class="text-danger">*</span></label>
+        <select class="form-select" name="course_id" required>
+          <option value="" disabled {{ 'selected' if not enrollment else '' }}>Select course</option>
+          {% for c in courses %}
+          <option value="{{ c.id }}" {{ 'selected' if enrollment and enrollment.course_id == c.id else '' }}>{{ c.code }} — {{ c.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Semester <span class="text-danger">*</span></label>
+        <input class="form-control" name="semester" required value="{{ enrollment.semester if enrollment else '' }}" placeholder="Fall 2025">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Status</label>
+        <select class="form-select" name="status">
+          {% for st in ["Active", "Completed", "Dropped"] %}
+          <option value="{{ st }}" {{ 'selected' if enrollment and enrollment.status == st else ('selected' if not enrollment and st == 'Active' else '') }}>{{ st }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-navy">{{ 'Update' if enrollment else 'Save' }} Enrollment</button>
+      <a href="{{ url_for('admin.enrollments_list') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

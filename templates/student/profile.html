@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Student Portal</div>
+  <h1 class="font-display">My Profile</h1>
+</div>
+
+<div class="udms-card p-4 p-md-5" style="max-width: 560px;">
+  <dl class="row mb-4">
+    <dt class="col-5 text-muted small">Roll Number</dt><dd class="col-7">{{ student.roll_number }}</dd>
+    <dt class="col-5 text-muted small">Full Name</dt><dd class="col-7">{{ student.full_name }}</dd>
+    <dt class="col-5 text-muted small">Email</dt><dd class="col-7">{{ student.user.email }}</dd>
+    <dt class="col-5 text-muted small">Department</dt><dd class="col-7">{{ student.department.name if student.department else "—" }}</dd>
+    <dt class="col-5 text-muted small">Semester</dt><dd class="col-7">{{ student.current_semester }}</dd>
+    <dt class="col-5 text-muted small">Enrollment Year</dt><dd class="col-7">{{ student.enrollment_year or "—" }}</dd>
+  </dl>
+
+  <hr>
+  <h2 class="h6 mb-3">Update contact info</h2>
+  <form method="POST">
+    {{ csrf_token_field() }}
+    <div class="mb-3">
+      <label class="form-label small fw-medium">Phone</label>
+      <input class="form-control" name="phone" value="{{ student.phone or '' }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label small fw-medium">Current Password</label>
+      <input class="form-control" type="password" name="current_password" autocomplete="current-password">
+      <div class="form-text">Required only if you're setting a new password.</div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label small fw-medium">New Password</label>
+      <input class="form-control" type="password" name="new_password" autocomplete="new-password" placeholder="Leave blank to keep current password">
+    </div>
+    <button type="submit" class="btn btn-navy">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

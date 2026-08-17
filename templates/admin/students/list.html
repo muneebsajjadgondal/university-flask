@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+  <div>
+    <div class="eyebrow">Enrollment Records</div>
+    <h1 class="font-display">Students</h1>
+    <p class="text-muted mb-0">{{ rows|length }} student{{ 's' if rows|length != 1 else '' }} on record.</p>
+  </div>
+  <a href="{{ url_for('admin.students_new') }}" class="btn btn-navy">+ Add Student</a>
+</div>
+
+<div class="udms-card">
+  {% if rows %}
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th class="px-3">Roll No.</th><th>Name</th><th>Email</th><th>Department</th><th>Status</th><th class="text-end px-3">Actions</th></tr></thead>
+      <tbody>
+        {% for s in rows %}
+        <tr>
+          <td class="px-3 fw-semibold">{{ s.roll_number }}</td>
+          <td>{{ s.full_name }}</td>
+          <td class="text-muted">{{ s.user.email }}</td>
+          <td>{{ s.department.code if s.department else "—" }}</td>
+          <td><span class="badge {{ 'badge-active' if s.status == 'active' else 'bg-secondary' }}">{{ s.status }}</span></td>
+          <td class="text-end px-3">
+            <a href="{{ url_for('admin.students_edit', student_id=s.id) }}" class="small me-3">Edit</a>
+            <form method="POST" action="{{ url_for('admin.students_delete', student_id=s.id) }}" class="d-inline" onsubmit="return confirm('Delete this student? This cannot be undone.');">
+              {{ csrf_token_field() }}
+              <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-center text-muted py-5 mb-0">No students yet. Add the first one to get started.</p>
+  {% endif %}
+</div>
+{% endblock %}

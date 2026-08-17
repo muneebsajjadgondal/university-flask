@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Student Portal</div>
+  <h1 class="font-display">Welcome, {{ student.full_name }}</h1>
+  <p class="text-muted mb-0">{{ student.roll_number }}{% if student.department %} · {{ student.department.name }}{% endif %} · Semester {{ student.current_semester }}</p>
+</div>
+
+<div class="row g-3 mb-5">
+  <div class="col-6 col-md-4">
+    <div class="stat-card">
+      <div class="stat-value">{{ active_enrollments }}</div>
+      <div class="stat-label">Active Enrollments</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="stat-card">
+      <div class="stat-value">{{ cgpa if cgpa is not none else "—" }}</div>
+      <div class="stat-label">CGPA</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <a href="{{ url_for('student.enrollments') }}" class="stat-card">
+      <div class="fw-semibold mb-1">My Enrollments</div>
+      <div class="small text-muted">View courses you're registered in</div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('student.attendance') }}" class="stat-card">
+      <div class="fw-semibold mb-1">Attendance</div>
+      <div class="small text-muted">Check your attendance record</div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('student.grades') }}" class="stat-card">
+      <div class="fw-semibold mb-1">Grades</div>
+      <div class="small text-muted">View marks and CGPA</div>
+    </a>
+  </div>
+</div>
+{% endblock %}

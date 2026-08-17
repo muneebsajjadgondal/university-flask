@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Attendance{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Student Portal</div>
+  <h1 class="font-display">My Attendance</h1>
+</div>
+
+<div class="row g-3 mb-4">
+  {% for s in summary %}
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="fw-semibold mb-1">{{ s.course.code }}</div>
+      <div class="stat-value" style="font-size:1.5rem;">{{ s.percent }}%</div>
+      <div class="stat-label">{{ s.present }} of {{ s.total }} classes attended</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="udms-card">
+  {% if rows %}
+  <table class="table mb-0">
+    <thead><tr><th class="px-3">Date</th><th>Course</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td class="px-3">{{ r.date.isoformat() }}</td>
+        <td>{{ r.course.code }} — {{ r.course.title }}</td>
+        <td><span class="badge badge-{{ r.status.lower() }}">{{ r.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-center text-muted py-5 mb-0">No attendance records yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

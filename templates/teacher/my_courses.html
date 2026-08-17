@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}My Courses{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Faculty Portal</div>
+  <h1 class="font-display">My Courses</h1>
+  <p class="text-muted mb-0">{{ assignments|length }} assignment{{ 's' if assignments|length != 1 else '' }}.</p>
+</div>
+
+<div class="udms-card">
+  {% if assignments %}
+  <table class="table mb-0">
+    <thead><tr><th class="px-3">Code</th><th>Title</th><th>Credits</th><th>Semester</th><th class="text-end px-3">Actions</th></tr></thead>
+    <tbody>
+      {% for a in assignments %}
+      <tr>
+        <td class="px-3 fw-semibold">{{ a.course.code }}</td>
+        <td>{{ a.course.title }}</td>
+        <td>{{ a.course.credit_hours }}</td>
+        <td>{{ a.semester }}</td>
+        <td class="text-end px-3">
+          <a href="{{ url_for('teacher.attendance', assignment_id=a.id) }}" class="small me-3">Attendance</a>
+          <a href="{{ url_for('teacher.marks', assignment_id=a.id) }}" class="small">Marks</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-center text-muted py-5 mb-0">You haven't been assigned to any courses yet. Contact the registrar.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Instructors{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+  <div>
+    <div class="eyebrow">Faculty</div>
+    <h1 class="font-display">Instructors</h1>
+    <p class="text-muted mb-0">{{ rows|length }} instructor{{ 's' if rows|length != 1 else '' }} on record.</p>
+  </div>
+  <a href="{{ url_for('admin.teachers_new') }}" class="btn btn-navy">+ Add Instructor</a>
+</div>
+
+<div class="udms-card">
+  {% if rows %}
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th class="px-3">Name</th><th>Email</th><th>Title</th><th>Department</th><th class="text-end px-3">Actions</th></tr></thead>
+      <tbody>
+        {% for t in rows %}
+        <tr>
+          <td class="px-3 fw-semibold">{{ t.full_name }}</td>
+          <td class="text-muted">{{ t.user.email }}</td>
+          <td>{{ t.title }}</td>
+          <td>{{ t.department.code if t.department else "—" }}</td>
+          <td class="text-end px-3">
+            <a href="{{ url_for('admin.teachers_edit', teacher_id=t.id) }}" class="small me-3">Edit</a>
+            <form method="POST" action="{{ url_for('admin.teachers_delete', teacher_id=t.id) }}" class="d-inline" onsubmit="return confirm('Delete this instructor? This cannot be undone.');">
+              {{ csrf_token_field() }}
+              <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-center text-muted py-5 mb-0">No instructors yet. Add the first one to get started.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Marks — {{ assignment.course.code }}{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Faculty Portal</div>
+  <h1 class="font-display">Marks Entry</h1>
+  <p class="text-muted mb-0">{{ assignment.course.code }} — {{ assignment.course.title }} · {{ assignment.semester }}</p>
+  <p class="text-muted small mb-0">Assignment (out of 20), Midterm (out of 30), Final (out of 50).</p>
+</div>
+
+{% if students %}
+<form method="POST">
+  {{ csrf_token_field() }}
+  <div class="udms-card mb-3">
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead><tr><th class="px-3">Roll No.</th><th>Student</th><th style="width:110px;">Assignment</th><th style="width:110px;">Midterm</th><th style="width:110px;">Final</th><th>Grade</th></tr></thead>
+        <tbody>
+          {% for s in students %}
+          {% set rec = existing.get(s.id) %}
+          <tr>
+            <td class="px-3">{{ s.roll_number }}</td>
+            <td>{{ s.full_name }}</td>
+            <td><input class="form-control form-control-sm" type="number" step="0.5" min="0" max="20" name="assignment_{{ s.id }}" value="{{ rec.assignment_marks if rec else 0 }}"></td>
+            <td><input class="form-control form-control-sm" type="number" step="0.5" min="0" max="30" name="midterm_{{ s.id }}" value="{{ rec.midterm_marks if rec else 0 }}"></td>
+            <td><input class="form-control form-control-sm" type="number" step="0.5" min="0" max="50" name="final_{{ s.id }}" value="{{ rec.final_marks if rec else 0 }}"></td>
+            <td>{% if rec %}<span class="fw-semibold">{{ rec.letter_grade }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-navy">Save Marks</button>
+</form>
+{% else %}
+<div class="udms-card">
+  <p class="text-center text-muted py-5 mb-0">No students are actively enrolled in this course for {{ assignment.semester }}.</p>
+</div>
+{% endif %}
+
+<a href="{{ url_for('teacher.my_courses') }}" class="d-inline-block mt-4 small">← Back to my courses</a>
+{% endblock %}

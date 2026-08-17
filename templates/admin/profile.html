@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Registrar</div>
+  <h1 class="font-display">My Profile</h1>
+</div>
+
+<div class="udms-card p-4 p-md-5" style="max-width: 560px;">
+  <dl class="row mb-4">
+    <dt class="col-5 text-muted small">Username</dt><dd class="col-7">{{ current_user.username }}</dd>
+    <dt class="col-5 text-muted small">Role</dt><dd class="col-7">Administrator</dd>
+  </dl>
+
+  <hr>
+  <form method="POST">
+    {{ csrf_token_field() }}
+    <div class="mb-3">
+      <label class="form-label small fw-medium">Email</label>
+      <input class="form-control" type="email" name="email" value="{{ current_user.email }}">
+    </div>
+
+    <hr class="my-4">
+    <h2 class="h6 mb-3">Change Password</h2>
+    <div class="mb-3">
+      <label class="form-label small fw-medium">Current Password</label>
+      <input class="form-control" type="password" name="current_password" autocomplete="current-password">
+      <div class="form-text">Required only if you're setting a new password.</div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label small fw-medium">New Password</label>
+      <input class="form-control" type="password" name="new_password" autocomplete="new-password" placeholder="Leave blank to keep current password">
+    </div>
+
+    <button type="submit" class="btn btn-navy">Save Changes</button>
+  </form>
+</div>
+{% endblock %}

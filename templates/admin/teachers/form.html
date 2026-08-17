@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if teacher else 'Add' }} Instructor{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Faculty</div>
+  <h1 class="font-display">{{ 'Edit' if teacher else 'Add' }} Instructor</h1>
+  <p class="text-muted mb-0">{{ teacher.full_name if teacher else 'Register a new faculty member.' }}</p>
+</div>
+
+<div class="udms-card p-4 p-md-5" style="max-width: 640px;">
+  <form method="POST">
+    {{ csrf_token_field() }}
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Full Name <span class="text-danger">*</span></label>
+        <input class="form-control" name="full_name" required value="{{ teacher.full_name if teacher else '' }}" placeholder="Ayesha Khan">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Title</label>
+        <input class="form-control" name="title" value="{{ teacher.title if teacher else 'Lecturer' }}" placeholder="Assistant Professor">
+      </div>
+    </div>
+
+    {% if not teacher %}
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Username <span class="text-danger">*</span></label>
+        <input class="form-control" name="username" required placeholder="ayesha.khan">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Password <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" name="password" required placeholder="Temporary password">
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Email {% if not teacher %}<span class="text-danger">*</span>{% endif %}</label>
+        <input class="form-control" type="email" name="email" {{ 'required' if not teacher else '' }} value="{{ teacher.user.email if teacher else '' }}" placeholder="ayesha.khan@university.edu">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Phone</label>
+        <input class="form-control" name="phone" value="{{ teacher.phone if teacher else '' }}" placeholder="+92 300 1234567">
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Department</label>
+        <select class="form-select" name="department_id">
+          <option value="">— None —</option>
+          {% for d in departments %}
+          <option value="{{ d.id }}" {{ 'selected' if teacher and teacher.department_id == d.id else '' }}>{{ d.name }} ({{ d.code }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-medium">Hire Date</label>
+        <input class="form-control" type="date" name="hire_date" value="{{ teacher.hire_date.isoformat() if teacher and teacher.hire_date else '' }}">
+      </div>
+    </div>
+
+    {% if teacher %}
+    <div class="mb-4">
+      <label class="form-label small fw-medium">Reset Password</label>
+      <input class="form-control" type="text" name="password" placeholder="Leave blank to keep current password">
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-navy">{{ 'Update' if teacher else 'Save' }} Instructor</button>
+      <a href="{{ url_for('admin.teachers_list') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

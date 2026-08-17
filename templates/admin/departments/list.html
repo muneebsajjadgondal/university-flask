@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Departments{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+  <div>
+    <div class="eyebrow">Academics</div>
+    <h1 class="font-display">Departments</h1>
+    <p class="text-muted mb-0">{{ rows|length }} department{{ 's' if rows|length != 1 else '' }} on record.</p>
+  </div>
+  <a href="{{ url_for('admin.departments_new') }}" class="btn btn-navy">+ Add Department</a>
+</div>
+
+<div class="udms-card">
+  {% if rows %}
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead><tr><th class="px-3">Code</th><th>Name</th><th>Building</th><th class="text-end px-3">Actions</th></tr></thead>
+      <tbody>
+        {% for d in rows %}
+        <tr>
+          <td class="px-3 fw-semibold">{{ d.code }}</td>
+          <td>{{ d.name }}</td>
+          <td class="text-muted">{{ d.building or "—" }}</td>
+          <td class="text-end px-3">
+            <a href="{{ url_for('admin.departments_edit', dept_id=d.id) }}" class="small me-3">Edit</a>
+            <form method="POST" action="{{ url_for('admin.departments_delete', dept_id=d.id) }}" class="d-inline" onsubmit="return confirm('Delete this department? This cannot be undone.');">
+              {{ csrf_token_field() }}
+              <button type="submit" class="btn btn-link btn-sm text-danger p-0 small">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-center text-muted py-5 mb-0">No departments yet. Add the first one to get started.</p>
+  {% endif %}
+</div>
+{% endblock %}

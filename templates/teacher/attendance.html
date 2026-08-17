@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Attendance — {{ assignment.course.code }}{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <div class="eyebrow">Faculty Portal</div>
+  <h1 class="font-display">Attendance</h1>
+  <p class="text-muted mb-0">{{ assignment.course.code }} — {{ assignment.course.title }} · {{ assignment.semester }}</p>
+</div>
+
+<form method="GET" class="d-flex align-items-end gap-2 mb-4" style="max-width: 320px;">
+  <div class="flex-grow-1">
+    <label class="form-label small fw-medium">Date</label>
+    <input class="form-control" type="date" name="date" value="{{ selected_date.isoformat() }}" onchange="this.form.submit()">
+  </div>
+</form>
+
+{% if students %}
+<form method="POST">
+  {{ csrf_token_field() }}
+  <input type="hidden" name="date" value="{{ selected_date.isoformat() }}">
+  <div class="udms-card mb-3">
+    <table class="table mb-0">
+      <thead><tr><th class="px-3">Roll No.</th><th>Student</th><th style="width: 220px;">Status</th></tr></thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td class="px-3">{{ s.roll_number }}</td>
+          <td>{{ s.full_name }}</td>
+          <td>
+            <select class="form-select form-select-sm" name="status_{{ s.id }}">
+              <option value="Present" {{ 'selected' if existing.get(s.id, 'Present') == 'Present' else '' }}>Present</option>
+              <option value="Absent" {{ 'selected' if existing.get(s.id) == 'Absent' else '' }}>Absent</option>
+            </select>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button type="submit" class="btn btn-navy">Save Attendance</button>
+</form>
+{% else %}
+<div class="udms-card">
+  <p class="text-center text-muted py-5 mb-0">No students are actively enrolled in this course for {{ assignment.semester }}.</p>
+</div>
+{% endif %}
+
+<a href="{{ url_for('teacher.my_courses') }}" class="d-inline-block mt-4 small">← Back to my courses</a>
+{% endblock %}
